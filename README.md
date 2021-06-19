@@ -15,6 +15,10 @@ Installation on Windows is a bit more complicated, but I recommend using [MSYS2]
 
 # Running
 
+On Linux:
+
 `./ffbsdl`
+
+On Windows, you will probably want to open up `cmd` or double-click the executable from `explorer.exe`, as there's some weird interaction between MinGW and SDL if you try to run `./ffbsdl`. All input/output seems to be gobbled up for some reason. If you get it to work, please tell me how you did it.
 
 On-screen instructions should hopefully be clear enough to follow without a manual.
