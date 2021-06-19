@@ -941,7 +941,7 @@ void run(SDL_Haptic *haptic, effect_mask supported_effects){
 	free(elems);
 }
 
-int main(){
+int main(int argc, char **argv){
 	if(init())
 		goto init_err;
 
