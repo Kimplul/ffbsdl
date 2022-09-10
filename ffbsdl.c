@@ -150,19 +150,18 @@ void discard_line(){
 }
 
 choice get_choice(){
-	char c = 0;
-	scanf("%c", &c);
+	char c = getchar();
 	discard_line();
 
 	switch(c){
-		case 'c': return CREATE_EFFECT;
-		case 'm': return MODIFY_EFFECT;
-		case 'p': return PLAY_EFFECT;
-		case 's': return STOP_EFFECT;
-		case 'd': return DESTROY_EFFECT;
-		case 'a': return SET_AUTOCENTER;
-		case 'g': return SET_GAIN;
-		case 'q': return QUIT;
+	case 'c': return CREATE_EFFECT;
+	case 'm': return MODIFY_EFFECT;
+	case 'p': return PLAY_EFFECT;
+	case 's': return STOP_EFFECT;
+	case 'd': return DESTROY_EFFECT;
+	case 'a': return SET_AUTOCENTER;
+	case 'g': return SET_GAIN;
+	case 'q': return QUIT;
 	}
 
 	return TRY_AGAIN;
@@ -202,6 +201,9 @@ int get_int(const char *s, long long int min, long long int max, long long int d
 	FFB_ATTR(constant, x, a, b)
 
 #define SHORT_CONSTANT_ATTR(x) \
+	CONSTANT_ATTR(x, SHRT_MIN, SHRT_MAX)
+
+#define USHORT_CONSTANT_ATTR(x) \
 	CONSTANT_ATTR(x, 0, USHRT_MAX)
 
 
@@ -209,6 +211,9 @@ int get_int(const char *s, long long int min, long long int max, long long int d
 	FFB_ATTR(periodic, x, a, b)
 
 #define SHORT_PERIODIC_ATTR(x) \
+	PERIODIC_ATTR(x, SHRT_MIN, SHRT_MAX)
+
+#define USHORT_PERIODIC_ATTR(x) \
 	PERIODIC_ATTR(x, 0, USHRT_MAX)
 
 
@@ -434,12 +439,12 @@ int create_ramp(SDL_Haptic *haptic, SDL_HapticEffect *effect){
 void get_periodic_effect_input(SDL_HapticEffect *effect){
 	PERIODIC_ATTR(direction.dir[0], 0, 36000);
 	PERIODIC_ATTR(length, 0, UINT_MAX);
-	SHORT_PERIODIC_ATTR(delay);
+	USHORT_PERIODIC_ATTR(delay);
 
-	SHORT_PERIODIC_ATTR(period);
+	USHORT_PERIODIC_ATTR(period);
 	SHORT_PERIODIC_ATTR(magnitude);
 	SHORT_PERIODIC_ATTR(offset);
-	SHORT_PERIODIC_ATTR(phase);
+	USHORT_PERIODIC_ATTR(phase);
 
 	SHORT_PERIODIC_ATTR(attack_length);
 	SHORT_PERIODIC_ATTR(attack_level);
@@ -559,21 +564,20 @@ int create_sine(SDL_Haptic *haptic, SDL_HapticEffect *effect){
 	effect->periodic.fade_level = 0;
 
 	get_periodic_effect_input(effect);
-
 	return SDL_HapticNewEffect(haptic, effect);
 }
 
 void get_constant_effect_input(SDL_HapticEffect *effect){
 	CONSTANT_ATTR(direction.dir[0], 0, 36000);
 	CONSTANT_ATTR(length, 0, UINT_MAX);
-	SHORT_CONSTANT_ATTR(delay);
+	USHORT_CONSTANT_ATTR(delay);
 
 	SHORT_CONSTANT_ATTR(level);
 
-	SHORT_CONSTANT_ATTR(attack_length);
-	SHORT_CONSTANT_ATTR(attack_level);
-	SHORT_CONSTANT_ATTR(fade_length);
-	SHORT_CONSTANT_ATTR(fade_level);
+	USHORT_CONSTANT_ATTR(attack_length);
+	USHORT_CONSTANT_ATTR(attack_level);
+	USHORT_CONSTANT_ATTR(fade_length);
+	USHORT_CONSTANT_ATTR(fade_level);
 }
 
 void modify_constant(SDL_Haptic *haptic, int id, SDL_HapticEffect *effect){
@@ -629,7 +633,7 @@ void show_create_effect_choices(effect_mask supported_effects){
 }
 
 choice get_create_effect_choice(effect_mask supported_effects){
-#define OPTION(x, c) {CREATE_##x, c}	
+#define OPTION(x, c) {CREATE_##x, c}
 
 	struct {
 		choice x;
@@ -674,45 +678,45 @@ void run_create_effect_choice(SDL_Haptic *haptic, size_t num_elems, haptic_elem 
 	SDL_HapticEffect *effect = &elem->effect;
 
 	switch(c){
-		case CREATE_CONSTANT:
-			id = create_constant(haptic, effect);
-			break;
+	case CREATE_CONSTANT:
+		id = create_constant(haptic, effect);
+		break;
 
-		case CREATE_SINE:
-			id = create_sine(haptic, effect);
-			break;
+	case CREATE_SINE:
+		id = create_sine(haptic, effect);
+		break;
 
-		case CREATE_TRIANGLE:
-			id = create_triangle(haptic, effect);
-			break;
+	case CREATE_TRIANGLE:
+		id = create_triangle(haptic, effect);
+		break;
 
-		case CREATE_SAWTOOTHUP:
-			id = create_sawtoothup(haptic, effect);
-			break;
+	case CREATE_SAWTOOTHUP:
+		id = create_sawtoothup(haptic, effect);
+		break;
 
-		case CREATE_SAWTOOTHDOWN:
-			id = create_sawtoothdown(haptic, effect);
-			break;
+	case CREATE_SAWTOOTHDOWN:
+		id = create_sawtoothdown(haptic, effect);
+		break;
 
-		case CREATE_RAMP:
-			id = create_ramp(haptic, effect);
-			break;
+	case CREATE_RAMP:
+		id = create_ramp(haptic, effect);
+		break;
 
-		case CREATE_SPRING:
-			id = create_spring(haptic, effect);
-			break;
+	case CREATE_SPRING:
+		id = create_spring(haptic, effect);
+		break;
 
-		case CREATE_DAMPER:
-			id = create_damper(haptic, effect);
-			break;
+	case CREATE_DAMPER:
+		id = create_damper(haptic, effect);
+		break;
 
-		case CREATE_INERTIA:
-			id = create_inertia(haptic, effect);
-			break;
+	case CREATE_INERTIA:
+		id = create_inertia(haptic, effect);
+		break;
 
-		case CREATE_FRICTION:
-			id = create_friction(haptic, effect);
-			break;
+	case CREATE_FRICTION:
+		id = create_friction(haptic, effect);
+		break;
 	}
 
 	if(id < 0){
@@ -789,45 +793,45 @@ void modify_effect(SDL_Haptic *haptic, size_t num_elems, haptic_elem elems[]){
 
 	choice c = get_modify_choice(effect->type);
 	switch(c){
-		case MODIFY_CONSTANT:
-			modify_constant(haptic, id, effect);
-			break;
+	case MODIFY_CONSTANT:
+		modify_constant(haptic, id, effect);
+		break;
 
-		case MODIFY_SINE:
-			modify_sine(haptic, id, effect);
-			break;
+	case MODIFY_SINE:
+		modify_sine(haptic, id, effect);
+		break;
 
-		case MODIFY_TRIANGLE:
-			modify_triangle(haptic, id, effect);
-			break;
+	case MODIFY_TRIANGLE:
+		modify_triangle(haptic, id, effect);
+		break;
 
-		case MODIFY_SAWTOOTHUP:
-			modify_sawtoothup(haptic, id, effect);
-			break;
+	case MODIFY_SAWTOOTHUP:
+		modify_sawtoothup(haptic, id, effect);
+		break;
 
-		case MODIFY_SAWTOOTHDOWN:
-			modify_sawtoothdown(haptic, id, effect);
-			break;
+	case MODIFY_SAWTOOTHDOWN:
+		modify_sawtoothdown(haptic, id, effect);
+		break;
 
-		case MODIFY_RAMP:
-			modify_ramp(haptic, id, effect);
-			break;
+	case MODIFY_RAMP:
+		modify_ramp(haptic, id, effect);
+		break;
 
-		case MODIFY_SPRING:
-			modify_spring(haptic, id, effect);
-			break;
+	case MODIFY_SPRING:
+		modify_spring(haptic, id, effect);
+		break;
 
-		case MODIFY_DAMPER:
-			modify_damper(haptic, id, effect);
-			break;
+	case MODIFY_DAMPER:
+		modify_damper(haptic, id, effect);
+		break;
 
-		case MODIFY_INERTIA:
-			modify_inertia(haptic, id, effect);
-			break;
+	case MODIFY_INERTIA:
+		modify_inertia(haptic, id, effect);
+		break;
 
-		case MODIFY_FRICTION:
-			modify_friction(haptic, id, effect);
-			break;
+	case MODIFY_FRICTION:
+		modify_friction(haptic, id, effect);
+		break;
 	}
 }
 
@@ -881,33 +885,33 @@ void set_gain(SDL_Haptic *haptic){
 
 void run_choice(SDL_Haptic *haptic, size_t num_elems, haptic_elem elems[], effect_mask supported_effects, choice c){
 	switch(c){
-		case CREATE_EFFECT:
-			create_effect(haptic, num_elems, elems, supported_effects);
-			break;
+	case CREATE_EFFECT:
+		create_effect(haptic, num_elems, elems, supported_effects);
+		break;
 
-		case MODIFY_EFFECT:
-			modify_effect(haptic, num_elems, elems);
-			break;
+	case MODIFY_EFFECT:
+		modify_effect(haptic, num_elems, elems);
+		break;
 
-		case PLAY_EFFECT:
-			play_effect(haptic, num_elems, elems);
-			break;
+	case PLAY_EFFECT:
+		play_effect(haptic, num_elems, elems);
+		break;
 
-		case STOP_EFFECT:
-			stop_effect(haptic, num_elems, elems);
-			break;
+	case STOP_EFFECT:
+		stop_effect(haptic, num_elems, elems);
+		break;
 
-		case DESTROY_EFFECT:
-			destroy_effect(haptic, num_elems, elems);
-			break;
+	case DESTROY_EFFECT:
+		destroy_effect(haptic, num_elems, elems);
+		break;
 
-		case SET_AUTOCENTER:
-			set_autocenter(haptic);
-			break;
+	case SET_AUTOCENTER:
+		set_autocenter(haptic);
+		break;
 
-		case SET_GAIN:
-			set_gain(haptic);
-			break;
+	case SET_GAIN:
+		set_gain(haptic);
+		break;
 	}
 }
 
